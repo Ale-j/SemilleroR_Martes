@@ -1,0 +1,107 @@
+---
+title: "Actividad 2 (Martes)"
+author: "Edimer David Jaramillo, Luis Gabriel González Herrera"
+date: "2 de octubre de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Datos créditos agropecuarios - Colombia 2017
+
+```{r}
+load("Creditos_2017.Rdata")
+head(creditos)
+```
+
+# Estructura interna
+
+```{r}
+str(creditos)
+```
+
+# Dimensión de los datos
+
+```{r}
+dim(creditos)
+class(creditos$Departamento.Inversion)
+levels(creditos$Departamento.Inversion)
+```
+
+# Créditos 2
+
+```{r}
+creditos2 <- creditos[creditos$Valor.Inversion >= 100000 &
+                        creditos$Valor.Inversion <= 500000000, c("Mes", "Tipo.Productor",
+                                                                 "Valor.Inversion",
+                                                                 "Departamento.Inversion",
+                                                                 "Departamento.de.Colocacion.de.Credito",
+                                                                 "Plazo", "Genero")]
+head(creditos2)
+```
+
+# Cambiando los nombres
+
+```{r}
+names(creditos2) <- c("Mes", "Tipo.pro", "Val.inv", "Depto.inv", "Depto.col", "Plazo", "Genero")
+head(creditos2)
+```
+
+# Estructura interna créditos 2
+
+```{r}
+str(creditos2)
+
+#Coerción sobre el mes (tipo factor)
+creditos2$Mes <- as.factor(creditos2$Mes) #una forma
+creditos2[, 1] <- as.factor(creditos2[, 1]) #otra forma
+str(creditos2)
+```
+
+# Frecuencia absoluta por género
+
+```{r}
+table(creditos2$Genero)
+```
+
+# Frecuencia relativa por género
+ 
+```{r}
+prop.table(table(creditos2$Genero)) * 100
+```
+ 
+# Proporción por tipo de productor
+
+```{r}
+prop.table(table(creditos2$Tipo.pro)) * 100
+```
+
+# Valor máximo y mínimo de inversión
+
+```{r}
+max(creditos$Valor.Inversion)
+min(creditos$Valor.Inversion)
+```
+
+# Créditos mensuales en Antioquia
+
+```{r}
+antioquia <- creditos2[creditos2$Depto.inv == "ANTIOQUIA",]
+table(antioquia$Mes)
+prop.table(table(antioquia$Mes)) * 100
+```
+
+# Departamento de inversión vs colocación
+
+```{r}
+# Con igualdad
+table(creditos2$Depto.inv == creditos2$Depto.col)
+prop.table(table(creditos2$Depto.inv == creditos2$Depto.col)) * 100 
+
+# Con diferencia
+table(creditos2$Depto.inv != creditos2$Depto.col)
+prop.table(table(creditos2$Depto.inv != creditos2$Depto.col)) * 100 
+```
+
